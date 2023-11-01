@@ -1,4 +1,4 @@
-package com.example.roofcalc.db.dao;
+package com.example.roofcalc.db.impl;
 
 import com.example.roofcalc.model.Roof;
 

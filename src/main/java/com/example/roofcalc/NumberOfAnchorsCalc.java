@@ -9,7 +9,7 @@ public class NumberOfAnchorsCalc {
         this.tearResistance = tearResistance;
     }
 
-    public double getNumberOfAnchors(double coefficientFCpe) {
+    public int getNumberOfAnchors(double coefficientFCpe) {
          return (int)Math.abs(pressureQpZ * coefficientFCpe / tearResistance * 1000);
     }
 

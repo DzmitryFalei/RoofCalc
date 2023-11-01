@@ -29,7 +29,7 @@
         </rowConstraints>
          <children>
             <TextField fx:id="tfHeight" alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Верх отметки кровли" GridPane.rowIndex="1" />
+            <Label text="Верх отметки кровли (1-200 м)" GridPane.rowIndex="1" />
             <Label text="Тип местности" GridPane.rowIndex="2" />
             <Label text="Тип кровли" GridPane.rowIndex="3" />
             <ChoiceBox fx:id="cbTerritory" accessibleRole="CHECK_BOX" prefWidth="60.0" value="1" GridPane.columnIndex="2" GridPane.rowIndex="2">
@@ -73,6 +73,7 @@
             <TextField fx:id="tfICpeStep" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <TextField fx:id="tfICpePerMeter" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="10" />
             <Label text="плоск." GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label fx:id="lbError" id="lbError" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

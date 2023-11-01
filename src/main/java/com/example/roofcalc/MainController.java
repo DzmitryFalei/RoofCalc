@@ -3,15 +3,16 @@ package com.example.roofcalc;
 import com.example.roofcalc.db.MaterialDao;
 import com.example.roofcalc.db.RoofDao;
 import com.example.roofcalc.db.TerrainDao;
-import com.example.roofcalc.db.dao.MaterialConnect;
-import com.example.roofcalc.db.dao.RoofConnect;
-import com.example.roofcalc.db.dao.TerrainConnect;
+import com.example.roofcalc.db.impl.MaterialConnect;
+import com.example.roofcalc.db.impl.RoofConnect;
+import com.example.roofcalc.db.impl.TerrainConnect;
 import com.example.roofcalc.model.Material;
 import com.example.roofcalc.model.Roof;
 import com.example.roofcalc.model.Terrain;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -42,6 +43,9 @@ public class MainController {
     private TextField tfHCpeStep;
     @FXML
     private TextField tfICpeStep;
+    @FXML
+    private Label lbError;
+
 
     private TerrainDao<Terrain> terrainDao;
     private MaterialDao<Material> materialDao;
@@ -50,13 +54,27 @@ public class MainController {
     @FXML
     public void initialize(){
         tfHeight.setText("5");
+        lbError.setText("");
+
         btnStart.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+
+            if (tfHeight.getText().matches("\\d+")) {
+                tfHeightValue = Double.parseDouble(tfHeight.getText());
+                if (tfHeightValue < 0 || tfHeightValue > 200) {
+                    lbError.setText("Ошибка!");
+                    return;
+                }
+                lbError.setText(" ");
+            } else {
+                lbError.setText("Ошибка!");
+                return;
+            }
 
             cbTerritoryValue = Integer.parseInt(cbTerritory.getValue());
             terrainDao = new TerrainConnect();
             Terrain terrain = terrainDao.getTerrain(cbTerritoryValue - 1).get();
 
-            tfHeightValue = Double.parseDouble(tfHeight.getText());
+
 
             WindCalc windCalc = new WindCalc(terrain.getRoughnessZo(), tfHeightValue, windSpeedValue);
             double pressureQpZ = windCalc.getPressureQpZ();
@@ -79,17 +97,13 @@ public class MainController {
             tfHCpePerMeter.setText(String.valueOf(anchorsCalc.getNumberOfAnchors(hCpe1)));
             tfICpePerMeter.setText(String.valueOf(anchorsCalc.getNumberOfAnchors(iCpe1)));
 
-            FasteningPitch fasteningPitch = new FasteningPitch(pressureQpZ, tensileStrength, tearResistance);
-            tfFCpeStep.setText(String.valueOf(fasteningPitch.getFasteningPitch(fCpe1)));
-            tfGCpeStep.setText(String.valueOf(fasteningPitch.getFasteningPitch(gCpe1)));
-            tfHCpeStep.setText(String.valueOf(fasteningPitch.getFasteningPitch(hCpe1)));
-            tfICpeStep.setText(String.valueOf(fasteningPitch.getFasteningPitch(iCpe1)));
-
-            System.out.println(anchorsCalc.getNumberOfAnchors(fCpe1));
-            System.out.println(anchorsCalc.getNumberOfAnchors(gCpe1));
-            System.out.println(anchorsCalc.getNumberOfAnchors(hCpe1));
-            System.out.println(anchorsCalc.getNumberOfAnchors(iCpe1));
+            FasteningPitchCalc fasteningPitchCalc = new FasteningPitchCalc(pressureQpZ, tensileStrength, tearResistance);
+            tfFCpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(fCpe1)));
+            tfGCpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(gCpe1)));
+            tfHCpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(hCpe1)));
+            tfICpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(iCpe1)));
         });
+
     }
 
 }
