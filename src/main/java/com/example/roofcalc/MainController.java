@@ -1,5 +1,8 @@
 package com.example.roofcalc;
 
+import com.example.roofcalc.calc.FasteningPitchCalc;
+import com.example.roofcalc.calc.NumberOfAnchorsCalc;
+import com.example.roofcalc.calc.WindCalc;
 import com.example.roofcalc.db.MaterialDao;
 import com.example.roofcalc.db.RoofDao;
 import com.example.roofcalc.db.TerrainDao;
@@ -19,14 +22,21 @@ import javafx.scene.input.MouseEvent;
 public class MainController {
 
     private int cbTerritoryValue;
-    double tfHeightValue;
-    double windSpeedValue = 23;
+    private String cbRoofValue;
+    private int roofId;
+    private double tfHeightValue;
+    private double windSpeedValue = 23;
+    private final static int MAX_HEIGHT_VALUE = 200;
+    private final static int MIN_HEIGHT_VALUE = 1;
+
     @FXML
     private Button btnStart;
     @FXML
     private TextField tfHeight;
     @FXML
     private ChoiceBox<String> cbTerritory;
+    @FXML
+    private ChoiceBox<String> cbRoof;
     @FXML
     private TextField tfFCpePerMeter;
     @FXML
@@ -60,7 +70,7 @@ public class MainController {
 
             if (tfHeight.getText().matches("\\d+")) {
                 tfHeightValue = Double.parseDouble(tfHeight.getText());
-                if (tfHeightValue < 0 || tfHeightValue > 200) {
+                if (tfHeightValue < MIN_HEIGHT_VALUE || tfHeightValue > MAX_HEIGHT_VALUE) {
                     lbError.setText("Ошибка!");
                     return;
                 }
@@ -74,8 +84,6 @@ public class MainController {
             terrainDao = new TerrainConnect();
             Terrain terrain = terrainDao.getTerrain(cbTerritoryValue - 1).get();
 
-
-
             WindCalc windCalc = new WindCalc(terrain.getRoughnessZo(), tfHeightValue, windSpeedValue);
             double pressureQpZ = windCalc.getPressureQpZ();
 
@@ -84,8 +92,15 @@ public class MainController {
             int tearResistance = material.getTearResistance();
             int tensileStrength = material.getTensileStrength();
 
+            cbRoofValue = cbRoof.getValue();
+            switch (cbRoofValue) {
+                case "плоская" -> roofId = 0;
+                case "скатная" -> roofId = 1;
+                case "мансарда" -> roofId = 2;
+            }
+
             roofDao = new RoofConnect();
-            Roof roof = roofDao.getRoof(0).get();
+            Roof roof = roofDao.getRoof(roofId).get();
             double fCpe1 = roof.getCoefficientFCpe1();
             double gCpe1 = roof.getCoefficientGCpe1();
             double hCpe1 = roof.getCoefficientHCpe1();

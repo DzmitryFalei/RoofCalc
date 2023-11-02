@@ -1,4 +1,4 @@
-package com.example.roofcalc;
+package com.example.roofcalc.calc;
 
 public class WindCalc {
     private double roughnessZo;

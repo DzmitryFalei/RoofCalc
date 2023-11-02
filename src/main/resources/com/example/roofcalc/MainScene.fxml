@@ -42,6 +42,15 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
+            <ChoiceBox fx:id="cbRoof" accessibleRole="CHECK_BOX" prefWidth="60.0" value="плоская" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="плоская" />
+                        <String fx:value="скатная" />
+                        <String fx:value="мансарда" />
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
             <Label text="Исходные данные:" underline="true">
                <font>
                   <Font size="14.0" />
@@ -72,8 +81,8 @@
             <TextField fx:id="tfHCpePerMeter" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="9" />
             <TextField fx:id="tfICpeStep" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <TextField fx:id="tfICpePerMeter" alignment="CENTER_RIGHT" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-            <Label text="плоск." GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label fx:id="lbError" id="lbError" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Label id="lbError" fx:id="lbError" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+
          </children>
       </GridPane>
    </children>
