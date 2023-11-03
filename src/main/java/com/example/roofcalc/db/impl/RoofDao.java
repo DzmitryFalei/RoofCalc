@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoofConnect implements com.example.roofcalc.db.RoofDao {
+public class RoofDao implements com.example.roofcalc.db.Dao {
 
     public static final String DB_PATH = "src//main//resources//RoofDB.txt";
     private List<Roof> roofs = new ArrayList<>();
 
-    public RoofConnect() {
+    public RoofDao() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String dbDataJson;
@@ -29,11 +29,10 @@ public class RoofConnect implements com.example.roofcalc.db.RoofDao {
         }
         roofs = gson.fromJson(dbDataJson, new TypeToken<List<Roof>>() {
         }.getType());
-
     }
 
     @Override
-    public Optional<Roof> getRoof(int roofDataId) {
+    public Optional<Roof> get(int roofDataId) {
         return Optional.ofNullable(roofs.get(roofDataId));
     }
 }

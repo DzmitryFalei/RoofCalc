@@ -3,12 +3,10 @@ package com.example.roofcalc;
 import com.example.roofcalc.calc.FasteningPitchCalc;
 import com.example.roofcalc.calc.NumberOfAnchorsCalc;
 import com.example.roofcalc.calc.WindCalc;
-import com.example.roofcalc.db.MaterialDao;
-import com.example.roofcalc.db.RoofDao;
-import com.example.roofcalc.db.TerrainDao;
-import com.example.roofcalc.db.impl.MaterialConnect;
-import com.example.roofcalc.db.impl.RoofConnect;
-import com.example.roofcalc.db.impl.TerrainConnect;
+import com.example.roofcalc.db.Dao;
+import com.example.roofcalc.db.impl.MaterialDao;
+import com.example.roofcalc.db.impl.RoofDao;
+import com.example.roofcalc.db.impl.TerrainDao;
 import com.example.roofcalc.model.Material;
 import com.example.roofcalc.model.Roof;
 import com.example.roofcalc.model.Terrain;
@@ -56,10 +54,9 @@ public class MainController {
     @FXML
     private Label lbError;
 
-
-    private TerrainDao<Terrain> terrainDao;
-    private MaterialDao<Material> materialDao;
-    private RoofDao<Roof> roofDao;
+    private Dao<Terrain> terrainDao;
+    private Dao<Material> materialDao;
+    private Dao<Roof> roofDao;
 
     @FXML
     public void initialize(){
@@ -81,14 +78,27 @@ public class MainController {
             }
 
             cbTerritoryValue = Integer.parseInt(cbTerritory.getValue());
-            terrainDao = new TerrainConnect();
-            Terrain terrain = terrainDao.getTerrain(cbTerritoryValue - 1).get();
+            terrainDao = new TerrainDao();
+            Terrain terrain = null;
+            if (terrainDao.get(cbTerritoryValue - 1).isPresent()) {
+                terrain = terrainDao.get(cbTerritoryValue - 1).get();
+            } else {
+                lbError.setText("E!tDb");
+                return;
+            }
 
             WindCalc windCalc = new WindCalc(terrain.getRoughnessZo(), tfHeightValue, windSpeedValue);
             double pressureQpZ = windCalc.getPressureQpZ();
 
-            materialDao = new MaterialConnect();
-            Material material = materialDao.getMaterial(0).get();
+            materialDao = new MaterialDao();
+            Material material = null;
+            if (materialDao.get(0).isPresent()) {
+                material = materialDao.get(0).get();
+            } else {
+                lbError.setText("E!mDb");
+                return;
+            }
+
             int tearResistance = material.getTearResistance();
             int tensileStrength = material.getTensileStrength();
 
@@ -99,8 +109,15 @@ public class MainController {
                 case "мансарда" -> roofId = 2;
             }
 
-            roofDao = new RoofConnect();
-            Roof roof = roofDao.getRoof(roofId).get();
+            roofDao = new RoofDao();
+            Roof roof = null;
+            if (roofDao.get(roofId).isPresent()) {
+                roof = roofDao.get(roofId).get();
+            } else {
+                lbError.setText("E!rDb");
+                return;
+            }
+
             double fCpe1 = roof.getCoefficientFCpe1();
             double gCpe1 = roof.getCoefficientGCpe1();
             double hCpe1 = roof.getCoefficientHCpe1();
@@ -118,7 +135,5 @@ public class MainController {
             tfHCpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(hCpe1)));
             tfICpeStep.setText(String.valueOf(fasteningPitchCalc.getFasteningPitch(iCpe1)));
         });
-
     }
-
 }

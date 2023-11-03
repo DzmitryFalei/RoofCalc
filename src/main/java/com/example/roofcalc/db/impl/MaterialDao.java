@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MaterialConnect implements com.example.roofcalc.db.MaterialDao {
+public class MaterialDao implements com.example.roofcalc.db.Dao {
 
     private List<Material> materials = new ArrayList<>();
 
-    public MaterialConnect() {
+    public MaterialDao() {
         materials.add(new Material("Default", 600, 150));
     }
 
-    @Override
-    public Optional<Material> getMaterial(int materialDataId) {
-        return Optional.ofNullable(materials.get(materialDataId));
+    public Optional<Material> get(int id) {
+        return Optional.ofNullable(materials.get(id));
     }
 }
